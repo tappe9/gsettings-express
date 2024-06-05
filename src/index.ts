@@ -57,6 +57,23 @@ const scrapeAmazon = async (url: string) => {
   }
 };
 
+// デバイス情報をDBに登録するエンドポイント
+app.post("/api/save-device", async (req: Request, res: Response) => {
+  const { amazonUrl, manufacturer, deviceName, price, thumbnailUrl } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO amazon_devices (amazon_url, manufacturer, device_name, price, thumbnail_url) 
+       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [amazonUrl, manufacturer, deviceName, price, thumbnailUrl]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error("Error saving data:", error);
+    res.status(500).json({ error: "Failed to save data" });
+  }
+});
+
 // サーバーの起動
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
