@@ -16,6 +16,18 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Server is running");
 });
 
+// デバイス情報をスクレイピングして返すエンドポイント
+app.post("/api/scrape-amazon", async (req: Request, res: Response) => {
+  const { url } = req.body;
+
+  try {
+    const deviceData = await scrapeAmazon(url);
+    res.status(200).json(deviceData);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to scrape data" });
+  }
+});
+
 // スクレイピング処理を行う関数
 const scrapeAmazon = async (url: string) => {
   try {
@@ -44,18 +56,6 @@ const scrapeAmazon = async (url: string) => {
     throw error;
   }
 };
-
-// デバイス情報をスクレイピングして返すエンドポイント
-app.post("/api/scrape-amazon", async (req: Request, res: Response) => {
-  const { url } = req.body;
-
-  try {
-    const deviceData = await scrapeAmazon(url);
-    res.status(200).json(deviceData);
-  } catch (error) {
-    res.status(500).json({ error: "Failed to scrape data" });
-  }
-});
 
 // サーバーの起動
 app.listen(port, () => {
