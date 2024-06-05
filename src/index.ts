@@ -24,11 +24,9 @@ const scrapeAmazon = async (url: string) => {
     await page.goto(url, { waitUntil: "networkidle2" });
 
     const data = await page.evaluate(() => {
-      const manufacturer = (document.querySelector("span#bylineInfo")?.textContent || "").trim();
+      const manufacturer = (document.querySelector("tr.po-brand .po-break-word")?.textContent || "").trim();
       const deviceName = (document.querySelector("span#productTitle")?.textContent || "").trim();
-      const price = (document.querySelector("span#priceblock_ourprice")?.textContent || "")
-        .trim()
-        .replace(/[^\d.]/g, "");
+      const price = (document.querySelector("span.a-price-whole")?.textContent || "").trim().replace(/[^\d.]/g, "");
       const thumbnailUrl = (document.querySelector("#landingImage") as HTMLImageElement)?.src || "";
 
       return {
