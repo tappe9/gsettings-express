@@ -63,10 +63,12 @@ app.post("/api/save-device", async (req: Request, res: Response) => {
 
   try {
     const result = await pool.query(
-      `INSERT INTO amazon_devices (amazon_url, manufacturer, device_name, price, thumbnail_url) 
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [amazonUrl, manufacturer, deviceName, price, thumbnailUrl]
+      `INSERT INTO amazon_devices (device_name, device_description, price, manufacturer, amazon_url, thumbnail_url) 
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+      [deviceName, "", price, manufacturer, amazonUrl, thumbnailUrl]
     );
+    let a = "INSERT INTO amazon_devices (device_name, device_description, price, manufacturer, amazon_url, thumbnail_url) VALUES (" 
+    + deviceName + ", " + "" + ", " + price + ", " + manufacturer + ", " + amazonUrl + ", " + thumbnailUrl + ") RETURNING *";
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error("Error saving data:", error);
