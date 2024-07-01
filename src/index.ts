@@ -67,8 +67,6 @@ app.post("/api/save-device", async (req: Request, res: Response) => {
        VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
       [deviceName, "", price, manufacturer, amazonUrl, thumbnailUrl]
     );
-    let a = "INSERT INTO amazon_devices (device_name, device_description, price, manufacturer, amazon_url, thumbnail_url) VALUES (" 
-    + deviceName + ", " + "" + ", " + price + ", " + manufacturer + ", " + amazonUrl + ", " + thumbnailUrl + ") RETURNING *";
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error("Error saving data:", error);
